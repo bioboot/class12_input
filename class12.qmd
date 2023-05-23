@@ -198,3 +198,84 @@ Still To Do:
 - Do some Pathway Analysis (KEGG and GO)
 
 
+```{r}
+head(res)
+```
+
+
+## Adding annotation data
+
+We can use the AnnotationDbi package to add annotation data such as gene identifiers from different sources to our results object.
+
+```{r}
+library("AnnotationDbi")
+library("org.Hs.eg.db")
+```
+
+We can translate (a.k.a. "map") between all these database id formats: 
+
+```{r}
+columns(org.Hs.eg.db)
+```
+
+My IDs are stored as the rownames of `res` 
+```{r}
+head( rownames(res) )
+```
+
+```{r}
+res$symbol <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res), # Our genenames
+                     keytype="ENSEMBL",   # The format of our genenames
+                     column="SYMBOL",     # The new format we want to add
+                     multiVals="first")
+```
+
+```{r}
+head(res)
+```
+
+
+```{r}
+res$entrez <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res), # Our genenames
+                     keytype="ENSEMBL",   # The format of our genenames
+                     column="ENTREZID",   # The new format we want to add
+                     multiVals="first")
+```
+```{r}
+res$genename <- mapIds(org.Hs.eg.db,
+                     keys=row.names(res), # Our genenames
+                     keytype="ENSEMBL",   # The format of our genenames
+                     column="GENENAME",   # The new format we want to add
+                     multiVals="first")
+```
+
+
+## Save our results to date
+
+```{r}
+write.csv(res, file="myresults.csv")
+```
+
+
+## Pathway analysis
+
+We can use the KEGG database of biological pathways to get some more insight into our differentially expressed genes and the kinds of biology they are involved in.
+
+```{r}
+#| message: false
+library(pathview)
+library(gage)
+library(gageData)
+```
+
+
+
+
+
+
+
+
+
+
