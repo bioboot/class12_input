@@ -270,12 +270,65 @@ library(gage)
 library(gageData)
 ```
 
+Look at the first two KEGG pathways
+```{r}
+data(kegg.sets.hs)
+
+# Examine the first 2 pathways in this kegg set for humans
+head(kegg.sets.hs, 2)
+```
 
 
 
+```{r}
+head( res$entrez )
+```
+
+Make a new vector of fold-change values that I will use as input for `gage` this will have the ENTREZ IDs as names.
 
 
+```{r}
+foldchanges = res$log2FoldChange
+names(foldchanges) = res$entrez
+```
 
+
+```{r}
+x <- 1:3
+x
+```
+
+```{r}
+names(x) <- c("chandra", "lisa", "xinqiu")
+x
+```
+
+```{r}
+head(foldchanges)
+```
+
+```{r}
+# Get the results
+keggres = gage(foldchanges, gsets=kegg.sets.hs)
+```
+
+
+```{r}
+attributes(keggres)
+```
+
+Look at the top 3 "LESS"
+```{r}
+head(keggres$less, 3)
+```
+
+Now I can use the **KEGG IDs** ("hsa05310" etc.) of these pathways from gage to view our genes mapped to these pathways.
+
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa05310")
+```
+
+![Asthma pathway from KEGG with our genes shown in color](hsa05310.pathview.png)
 
 
 
